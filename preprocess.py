@@ -5,13 +5,14 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader
 
 
-class ActionObservationDataset(Dataset):
+class ObtainDataset(Dataset):
     '''
-    Inherits functionality from Torch dataset
+    Inherits functionality from Torch dataset.
+    Required dict keys to load associated data.
     '''
-    def __init__(self, dic, transform=None, target_transform=None):
-        self.img_labels = dic['actions']
-        self.imgs = dic['observations']
+    def __init__(self, dic, images, labels, transform=None, target_transform=None):
+        self.img_labels = dic[labels]
+        self.imgs = dic[images]
         self.transform = transform
         self.target_transform = target_transform
 

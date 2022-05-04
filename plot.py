@@ -1,6 +1,13 @@
 import random
 import turtle
+import torch
+import numpy as np
+import pandas as pd
+import seaborn as sn
+from sklearn.metrics import confusion_matrix
+
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from scipy.signal import savgol_filter
 
 def plot_obs_top_dep(env):
@@ -156,3 +163,88 @@ def plot_acc(test_acc, train_acc, smooth=False):
         plt.ylabel('Accuracy in %')
         plt.title('Accuracy')
         plt.show()
+
+def show_example_classificataions(dataset, net, amount=5):
+    classes_expl = {0: 'turn left', 1: 'turn right', 2: 'walk forwards', 3: 'walk backwards'}
+
+    # calculate total accuracy on training data
+    correct = 0
+    total = 0
+    # since we're not training, we don't need to calculate the gradients for our outputs
+    with torch.no_grad():
+        for data in dataset:
+            images, labels = data
+            # calculate outputs by running images through the network
+            outputs = net(images)
+            # the class with the highest energy is what we choose as prediction
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+    print('GroundTruth: ', ', '.join(f'{classes_expl[int(labels[j])]}' for j in range(amount)))
+    print('Predicted: ', ', '.join(f'{classes_expl[int(predicted[j])]}' for j in range(amount)), '\n')
+
+def plot_confusion_matrix(dataset, network, save=False):
+    '''
+    Plots a confusion matrix.
+    Input: dataset (train or test), the trained network
+    '''
+    classes_expl = {0: 'turn left', 1: 'turn right', 2: 'walk forwards', 3: 'walk backwards'}
+
+    # plot confusion matrix
+    y_pred = []
+    y_true = []
+
+    # iterate over test data
+    for inputs, labels in dataset:
+            output = network(inputs) # Feed pass through network
+
+            output = (torch.max(torch.exp(output), 1)[1]).data.cpu().numpy()
+            y_pred.extend(output) # Save Prediction
+
+            labels = labels.data.cpu().numpy()
+            y_true.extend(labels) # Save Truth
+
+    # Build confusion matrix
+    classes = list(set(labels))
+    cf_matrix = confusion_matrix(y_true, y_pred)
+    df_cm = pd.DataFrame(cf_matrix/np.sum(cf_matrix) *10, index = [classes_expl[i] for i in classes],
+                         columns = [classes_expl[i] for i in classes])
+    plt.figure(figsize = (12,7))
+    plt.rcParams.update({'font.size': 16})
+    sn.heatmap(df_cm, annot=True)
+    plt.suptitle('Confusion matrix')
+    plt.ylabel('True labels')
+    plt.xlabel('Predicted labels')
+    plt.show()
+
+    if save:
+        plt.savefig('output.png')
+
+def plot_grad_flow(named_parameters):
+    '''Plots the gradients flowing through different layers in the net during training.
+    Can be used for checking for possible gradient vanishing / exploding problems.
+
+    Usage: Plug this function in Trainer class after loss.backwards() as
+    "plot_grad_flow(self.model.named_parameters())" to visualize the gradient flow'''
+    ave_grads = []
+    max_grads= []
+    layers = []
+    for n, p in named_parameters:
+        if(p.requires_grad) and ("bias" not in n):
+            layers.append(n)
+            ave_grads.append(p.grad.abs().mean())
+            max_grads.append(p.grad.abs().max())
+    plt.bar(np.arange(len(max_grads)), max_grads, alpha=0.1, lw=1, color="c")
+    plt.bar(np.arange(len(max_grads)), ave_grads, alpha=0.1, lw=1, color="b")
+    plt.hlines(0, 0, len(ave_grads)+1, lw=2, color="k" )
+    plt.xticks(range(0,len(ave_grads), 1), layers, rotation="vertical")
+    plt.xlim(left=0, right=len(ave_grads))
+    plt.ylim(bottom = -0.001, top=0.02) # zoom in on the lower gradient regions
+    plt.xlabel("Layers")
+    plt.ylabel("average gradient")
+    plt.title("Gradient flow")
+    plt.grid(True)
+    plt.legend([Line2D([0], [0], color="c", lw=4),
+                Line2D([0], [0], color="b", lw=4),
+                Line2D([0], [0], color="k", lw=4)], ['max-gradient', 'mean-gradient', 'zero-gradient'])
