@@ -222,11 +222,13 @@ def plot_confusion_matrix(dataset, network, save=False):
         plt.savefig('output.png')
 
 def plot_grad_flow(named_parameters):
-    '''Plots the gradients flowing through different layers in the net during training.
+    '''
+    Plots the gradients flowing through different layers in the net during training.
     Can be used for checking for possible gradient vanishing / exploding problems.
 
     Usage: Plug this function in Trainer class after loss.backwards() as
-    "plot_grad_flow(self.model.named_parameters())" to visualize the gradient flow'''
+    "plot_grad_flow(self.model.named_parameters())" to visualize the gradient flow
+    '''
     ave_grads = []
     max_grads= []
     layers = []

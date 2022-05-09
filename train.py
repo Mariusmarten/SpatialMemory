@@ -70,7 +70,7 @@ def train(train_data, val_data, net, criterion, optimizer, steps):
             pbar.update(1)
 
             if epoch % 10 == 0:
-                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {100 * train_correct // train_total} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {100 * test_correct // test_total} %,')
+                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,')
 
     print('Finished Training')
     return net, train_loss, test_loss, train_acc, test_acc
@@ -179,7 +179,7 @@ def DualOutput(train_data, val_data, net, criterion, optimizer, steps):
             pbar.update(1)
 
             if epoch % 10 == 0:
-                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {100 * train_correct // train_total} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {100 * test_correct // test_total} %,')
+                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,')
 
     print('Finished Training')
     return net, train_loss, test_loss, train_acc, test_acc
@@ -198,10 +198,10 @@ def DualInput(train_data, val_data, net, criterion, optimizer, steps):
     test_acc = []
     writer = SummaryWriter()
 
-    images, labels = next(iter(train_data))
-    grid = torchvision.utils.make_grid(images)
+    imagesA, imagesB, labels = next(iter(train_data))
+    grid = torchvision.utils.make_grid(imagesA)
     writer.add_image('images', grid, 0)
-    writer.add_graph(net, [images, images])
+    writer.add_graph(net, [imagesA, imagesB])
 
     with tqdm(total=steps, unit =" Episode", desc ="Progress") as pbar:
         for epoch in range(steps):  # loop over the dataset multiple times
@@ -213,13 +213,14 @@ def DualInput(train_data, val_data, net, criterion, optimizer, steps):
 
             for i, data in enumerate(train_data, 0):
                 # get the inputs; data is a list of [inputs, labels]
-                inputs, labels = data
+                inputsA, inputB, labels = data
+                labels = torch.FloatTensor(labels)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
 
                 # forward + backward + optimize
-                outputs = net(inputs, inputs)
+                outputs = net(inputsA, inputB)
 
                 # loss
                 loss = criterion(outputs, labels)
