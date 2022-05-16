@@ -85,8 +85,15 @@ def DualOutput(train_data, val_data, net, criterion, optimizer, steps):
 
     train_loss = []
     test_loss = []
+
     train_acc = []
     test_acc = []
+
+    train_distances = []
+    test_distances = []
+
+    train_distances_itemwise = []
+    test_distances_itemwise = []
 
     with tqdm(total=steps, unit =" Episode", desc ="Progress") as pbar:
         for epoch in range(steps):  # loop over the dataset multiple times
@@ -116,6 +123,11 @@ def DualOutput(train_data, val_data, net, criterion, optimizer, steps):
 
                 loss = loss_A + loss_B
                 loss.backward()
+
+                # compute train_distances
+                train_distance_itemwise = torch.sqrt(torch.square(labels_A - outputs_A.squeeze()) + torch.square(labels_B - outputs_B.squeeze()))
+                train_distance = torch.sum(train_distance_itemwise)
+                train_distance = torch.div(train_distance, len(labels_A))
 
                 # track loss statistics
                 train_running_loss += loss.item()
@@ -160,6 +172,11 @@ def DualOutput(train_data, val_data, net, criterion, optimizer, steps):
                         loss = loss_A + loss_B
                         test_running_loss += loss.item()
 
+                        # compute test_distances
+                        test_distance_itemwise = torch.sqrt(torch.square(labels_A - outputs_A.squeeze()) + torch.square(labels_B - outputs_B.squeeze()))
+                        test_distance = torch.sum(test_distance_itemwise)
+                        test_distance = torch.div(test_distance, len(labels_A)).numpy()
+
                         # compute test acc
                         outputs_A = torch.round(outputs_A.data)
                         outputs_B = torch.round(outputs_B.data)
@@ -174,15 +191,23 @@ def DualOutput(train_data, val_data, net, criterion, optimizer, steps):
 
             train_loss.append(train_running_loss/len(train_data))
             test_loss.append(test_running_loss/len(val_data))
+
             train_acc.append(100 * train_correct / train_total)
             test_acc.append(100 * test_correct / test_total)
+
+            train_distances.append(train_distance)
+            test_distances.append(test_distance)
+
+            train_distances_itemwise.append(train_distance_itemwise)
+            test_distances_itemwise.append(test_distance_itemwise)
+
             pbar.update(1)
 
             if epoch % 10 == 0:
                 print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,')
 
     print('Finished Training')
-    return net, train_loss, test_loss, train_acc, test_acc
+    return net, train_loss, test_loss, train_acc, test_acc, train_distances, test_distances, train_distances_itemwise, test_distances_itemwise
 
 
 def DualInput(train_data, val_data, net, criterion, optimizer, steps):
