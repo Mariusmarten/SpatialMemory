@@ -10,3 +10,5 @@ misc/
 .ipynb_checkpoints/
 
 datasets
+
+runs/
