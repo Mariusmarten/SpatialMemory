@@ -31,6 +31,30 @@ class ObtainDataset(Dataset):
             label = self.target_transform(label)
         return image, label
 
+class ObtainDataset_notransform(Dataset):
+    '''
+    Inherits functionality from Torch dataset.
+    Required dict keys to load associated data.
+    '''
+    def __init__(self, images, labels, transform=None, target_transform=None):
+        self.imgs = images
+        self.labels = labels
+        self.transform = transform
+        self.target_transform = target_transform
+
+    def __len__(self):
+        return len(self.labels)
+
+    def __getitem__(self, idx):
+        # the method returns a pair: given - label for the index number i
+        labels = self.labels[idx]
+        images = self.imgs[idx]
+        if self.transform:
+            images = self.transform(images)
+        if self.target_transform:
+            labels = self.target_transform(labels)
+        return images, labels
+
 class ObtainDualDataset(Dataset):
     '''
     Inherits functionality from Torch dataset.
@@ -97,6 +121,67 @@ def split_data(data, train_set_perc=0.8, shuffle=True):
         test_data[str(i)] = col_test
 
     return train_data, test_data
+
+def split_data_for_trajectories(data, train_set_perc=0.8, shuffle=True, length_trajectory=10):
+    '''
+    Splits dataset into training and test set.
+    Returns training and test set.
+    '''
+
+    length = len(data['actions'])/length_trajectory
+    absolute_split = length*train_set_perc
+
+    def chunks(lst):
+        n = length_trajectory
+        chunked_lst = []
+        for i in range(0, len(lst), n):
+            chunked_lst.append(lst[i:i + n])
+
+        return chunked_lst
+
+    if shuffle:
+        key_list = list(data.keys())
+        seed = random.random()
+
+        for i in key_list:
+            data_i = data.pop(i)
+            data_i = chunks(data_i)
+            #print(data_i)
+            random.seed(seed)
+            random.shuffle(data_i)
+            data[i] = data_i
+
+    train_data = {}
+    test_data = {}
+
+    for i in data.keys():
+        col_train = []
+        col_test = []
+        for index, val in enumerate(data[i]):
+            if index < absolute_split:
+                col_train.append(val)
+            else:
+                col_test.append(val)
+        train_data[str(i)] = col_train
+        test_data[str(i)] = col_test
+
+    return train_data, test_data
+
+def process_trajectory(data):
+    images_unprocessed = data['observations']
+    pos_trajectories = data['positions']
+
+    img_trajectories = []
+
+    for images in images_unprocessed:
+        image_trajectory = []
+        for image in images:
+            image = torch.from_numpy(image).float()
+            image = image.permute(2, 0, 1)
+            image_trajectory.append(image)
+        img_trajectories.append(image_trajectory)
+
+    return img_trajectories, pos_trajectories
 
 def split_n_steps_between(dataset, n):
     '''
