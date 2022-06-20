@@ -249,4 +249,4 @@ def recode_actions(dataset, n):
 
     dataset['actions'] = actions_recoded
 
-    return dataset, counter
+    return dataset, counter, single_class_encoding_dic

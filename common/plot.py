@@ -400,3 +400,19 @@ def plot_difference_img(data, distance):
     plt.figure(figsize=(7, 7))
     plt.imshow(new)
     plt.show()
+
+def plot_dataset_imgs(dataset):
+    index = 560
+
+    imageA = dataset['observationsA'][index]
+    imageB = dataset['observationsB'][index]
+
+    a = [imageA, imageB]
+
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(12,4))
+    for i, ax in enumerate(axs.flatten()):
+        plt.sca(ax)
+        plt.imshow(a[i], cmap=plt.cm.jet)
+
+    plt.tight_layout()
+    plt.show()
