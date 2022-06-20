@@ -1,6 +1,7 @@
 import random
 import turtle
 import torch
+import statistics
 import numpy as np
 import pandas as pd
 import seaborn as sn
@@ -257,3 +258,126 @@ def plot_grayscale_image(env):
     arr = np.asarray(image)
     plt.imshow(arr[:,:,2], cmap='gray')
     plt.show()
+
+def plot_euclidean_distance(train_dis, test_dis):
+
+    # preprocess values
+
+    train_dis_notensor  = []
+    for i in train_dis:
+        i = i.detach().numpy()
+        i = i.item()
+        train_dis_notensor.append(i)
+
+    test_dis_notensor  = []
+    for i in test_dis:
+        test_dis_notensor.append(float(i))
+
+
+    plt.rcParams['figure.figsize'] = 20, 5.5
+
+    with plt.style.context('ggplot'):
+        plt.plot(train_dis_notensor[10:], label = "Training distance", linewidth=3, color='tab:blue')
+        plt.plot(test_dis_notensor[10:], label = "Validation distance", linewidth=3)
+        plt.title('Euclidean distance per epoch', fontsize=22)
+        plt.legend(fontsize=18)
+        plt.show()
+
+def histo_distribution_shift(test_dis_item):
+
+    max_lim = 17
+
+    def has_len(obj):
+        return hasattr(obj, '__len__')
+
+    def is_float_try(inp):
+        return isinstance(inp, float) or not has_len(input)
+
+    dis_item_notensor  = []
+    for item in test_dis_item:
+        if has_len(item):
+            for i in item:
+                i = i.detach().numpy()
+                if is_float_try(i):
+                    dis_item_notensor.append(float(i))
+                else:
+                    dis_item_notensor.extend(i)
+        else:
+            item = item.detach().numpy()
+            dis_item_notensor.append(float(item))
+
+    length = len(dis_item_notensor)
+
+    plt.rcParams['figure.figsize'] = 20, 5.5
+    plt.rcParams.update({'font.size': 25})
+    plt.rc('xtick', labelsize=18)
+    plt.rc('ytick', labelsize=18)
+
+    with plt.style.context('ggplot'):
+        plt.hist(dis_item_notensor[0:int(length*0.1)], bins=100, rwidth=0.9, color='indianred', range=(0, max_lim), alpha=0.8)
+        plt.title('Distance Distribution - First 10%', fontsize=22)
+        plt.xlabel('Distance', fontsize=20)
+        plt.ylabel('Amount', fontsize=20)
+        mean_val = statistics.mean(dis_item_notensor[10:int(length*0.1)])
+        plt.text(mean_val*1.1, 2, 'Mean: {:.2f}'.format(mean_val), fontsize=22)
+        plt.axvline(mean_val, color='k', linestyle='dashed', linewidth=2)
+        plt.show()
+
+    with plt.style.context('ggplot'):
+        plt.hist(dis_item_notensor[int(length*0.9):length-1], bins=100, rwidth=0.9, color='indianred', range=(0, max_lim), alpha=0.8)
+        plt.title('Distance Distribution - Last 10%', fontsize=22)
+        plt.xlabel('Distance', fontsize=20)
+        plt.ylabel('Amount', fontsize=20)
+        mean_val = statistics.mean(dis_item_notensor[int(length*0.9):length-1])
+        plt.text(mean_val*1.1, 2, 'Mean: {:.2f}'.format(mean_val), fontsize=22)
+        plt.axvline(mean_val, color='k', linestyle='dashed', linewidth=2)
+        plt.show()
+
+def histo_train_val(test_dis_item, train_dis_item):
+
+    max_lim = 17
+
+    def has_len(obj):
+        return hasattr(obj, '__len__')
+
+    def declutter(dis_item):
+        dis_item_notensor  = []
+        for item in dis_item:
+            if has_len(item):
+                for i in item:
+                    i = i.detach().numpy()
+                    dis_item_notensor.extend(i)
+            else:
+                item = item.detach().numpy()
+                dis_item_notensor.extend(item)
+        length = len(dis_item_notensor)
+        return dis_item_notensor
+
+    test_dis_item_notensor = declutter(test_dis_item)
+    train_dis_item_notensor = declutter(train_dis_item)
+
+    plt.rcParams['figure.figsize'] = 20, 5.5
+    plt.rcParams.update({'font.size': 25})
+    plt.rc('xtick', labelsize=18)
+    plt.rc('ytick', labelsize=18)
+
+    with plt.style.context('ggplot'):
+        max_lim = 17
+        plt.hist(train_dis_item_notensor[10:], bins=50, rwidth=0.9, color='#607c8e', range=(0, max_lim), alpha=0.9)
+        plt.xlabel('Distance', fontsize=20)
+        plt.ylabel('Amount', fontsize=20)
+        plt.title('Training set - Distances (50 bins)', fontsize=22)
+        mean_val = statistics.mean(train_dis_item_notensor[10:])
+        plt.text(mean_val*1.1, max_lim*0.9, 'Mean: {:.2f}'.format(mean_val), fontsize=22)
+        plt.axvline(mean_val, color='k', linestyle='dashed', linewidth=2)
+        plt.show()
+
+    with plt.style.context('ggplot'):
+        plt.hist(test_dis_item_notensor[10:], bins=50, rwidth=0.9, color='indianred', range=(0, 17), alpha=0.9)
+        plt.xlabel('Distance', fontsize=20)
+        plt.ylabel('Amount', fontsize=20)
+        plt.title('Validation set - Distances (50 bins)', fontsize=22)
+        mean_val = statistics.mean(test_dis_item_notensor[10:])
+        plt.text(mean_val*1.1, max_lim*0.9, 'Mean: {:.2f}'.format(mean_val), fontsize=22)
+        plt.axvline(mean_val, color='k', linestyle='dashed', linewidth=2)
+        plt.show()

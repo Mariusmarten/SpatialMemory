@@ -133,7 +133,7 @@ def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
                 train_running_loss += loss.item()
 
                 # plot gradients in each layer
-                plot.plot_grad_flow(net.named_parameters())
+                common.plot.plot_grad_flow(net.named_parameters())
 
                 optimizer.step()
 
