@@ -215,3 +215,38 @@ def split_n_steps_between(dataset, n):
             dataset[key].pop()
 
     return dataset
+
+def recode_actions(dataset, n):
+    single_class_encoding_dic = {}
+    counter = 0
+
+    if n == 1:
+        for i in range(0, 4):
+            single_class_encoding_dic[str([i])] = counter
+            counter += 1
+    elif n == 2:
+        for i in range(0, 4):
+            for j in range(0, 4):
+                single_class_encoding_dic[str([i, j])] = counter
+                counter += 1
+    elif n == 3:
+        for i in range(0, 4):
+            for j in range(0, 4):
+                for k in range(0, 4):
+                    single_class_encoding_dic[str([i, j, k])] = counter
+                    counter += 1
+    elif n == 4:
+        for i in range(0, 4):
+            for j in range(0, 4):
+                for k in range(0, 4):
+                    for h in range(0, 4):
+                        single_class_encoding_dic[str([i, j, k, h])] = counter
+                        counter += 1
+
+    actions_recoded = []
+    for actions in dataset['actions']:
+        actions_recoded.append([single_class_encoding_dic[str(actions)]]) # recode all actions
+
+    dataset['actions'] = actions_recoded
+
+    return dataset, counter

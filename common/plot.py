@@ -295,16 +295,16 @@ def histo_distribution_shift(test_dis_item):
 
     dis_item_notensor  = []
     for item in test_dis_item:
-        if has_len(item):
+        if len(list(test_dis_item[0].size())) == 2:
             for i in item:
                 i = i.detach().numpy()
                 if is_float_try(i):
-                    dis_item_notensor.append(float(i))
-                else:
                     dis_item_notensor.extend(i)
+                else:
+                    dis_item_notensor.append(i)
         else:
             item = item.detach().numpy()
-            dis_item_notensor.append(float(item))
+            dis_item_notensor.extend(item)
 
     length = len(dis_item_notensor)
 
@@ -343,7 +343,7 @@ def histo_train_val(test_dis_item, train_dis_item):
     def declutter(dis_item):
         dis_item_notensor  = []
         for item in dis_item:
-            if has_len(item):
+            if len(list(dis_item[0].size())) == 2:
                 for i in item:
                     i = i.detach().numpy()
                     dis_item_notensor.extend(i)
@@ -381,3 +381,22 @@ def histo_train_val(test_dis_item, train_dis_item):
         plt.text(mean_val*1.1, max_lim*0.9, 'Mean: {:.2f}'.format(mean_val), fontsize=22)
         plt.axvline(mean_val, color='k', linestyle='dashed', linewidth=2)
         plt.show()
+
+def plot_difference_img(data, distance):
+    rand = random.randint(0, len(data['actions'])-distance-1)
+
+    act = []
+    for i in range(distance):
+        act.append(data['actions'][rand+i])
+
+    print('actions ', act)
+
+    new = data['observations'][rand] - data['observations'][rand+distance]
+
+    coord = data['positions'][rand+distance]
+    x, _, y = coord
+    print('position ', [round(x, 3), round(y, 3)])
+
+    plt.figure(figsize=(7, 7))
+    plt.imshow(new)
+    plt.show()
