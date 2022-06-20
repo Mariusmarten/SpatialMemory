@@ -1,0 +1,14 @@
+params:
+
+    # preprocess
+    length_trajectory: 10
+    batch_size: 128
+
+    # training
+    epoch_count: 20
+    optimizer: 'Adam'
+    lr: 1e-4
+    save_model: false
+
+    # plotting
+    save_plots: false
