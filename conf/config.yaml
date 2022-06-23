@@ -1,14 +1,25 @@
 params:
 
-    # preprocess
-    length_trajectory: 10
+    # Traing with images or actions
+    train_imgs : False
+
+    # preprocessing
+    dataset_name : None
+    seq_length : 20
     batch_size: 128
+    training_set_size : 0.67
+
+    # lstm configuration
+    hidden_size : 20
+    num_layers : 1
+    num_classes : 4
+    input_size : 1
 
     # training
-    epoch_count: 20
-    optimizer: 'Adam'
-    lr: 1e-4
-    save_model: false
+    num_epochs : 2000
+    learning_rate : 0.01
+    optimizer_type : 'Adam'
+    save_model : False
 
     # plotting
     save_plots: false

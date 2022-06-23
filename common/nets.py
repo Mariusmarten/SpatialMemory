@@ -2,6 +2,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.autograd import Variable
 
 class Forward(nn.Module):
     def __init__(self, output_neurons):
@@ -97,7 +98,8 @@ class DualInput(nn.Module):
 
         return x
 
-class CNN(nn.Module):
+# original_version
+class CNN_coords(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv1 = nn.Conv2d(3, 10, 5)
@@ -114,7 +116,7 @@ class CNN(nn.Module):
         x = x.view(i.shape[0], i.shape[1], -1)
         return x
 
-class LSTM(nn.Module):
+class LSTM_coords(nn.Module):
     def __init__(self, length_trajectory):
         super(LSTM, self).__init__()
         self.lstm = nn.LSTM(480, 100, 2)
@@ -129,3 +131,53 @@ class LSTM(nn.Module):
         output1 = F.relu(self.fc(x))
         # alternatively we could just return the final hidde
         return output0, output1, hn, cn
+
+class LSTM(nn.Module):
+
+    def __init__(self, num_classes, input_size, hidden_size, num_layers, seq_length):
+        super(LSTM, self).__init__()
+
+        self.num_classes = num_classes
+        self.num_layers = num_layers
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.seq_length = seq_length
+
+        self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_size,
+                            num_layers=num_layers, batch_first=True)
+
+        self.fc1 = nn.Linear(hidden_size, int(hidden_size*0.5))
+        self.fc2 = nn.Linear(int(hidden_size*0.5), num_classes)
+
+    def forward(self, x):
+        # newly initialized only after each epoch
+        h_0 = Variable(torch.zeros(
+            self.num_layers, x.size(0), self.hidden_size))
+        c_0 = Variable(torch.zeros(
+            self.num_layers, x.size(0), self.hidden_size))
+
+        # Propagate input through LSTM
+        ula, (h_out, _) = self.lstm(x, (h_0, c_0))
+        h_out = h_out.view(-1, self.hidden_size)
+        out = F.relu(self.fc1(h_out))
+        out = self.fc2(out)
+
+        return out
+
+class CNN(nn.Module):
+
+    def __init__(self, seq_length):
+        super(CNN, self).__init__()
+        self.conv1 = nn.Conv2d(3, seq_length, 5)
+        self.conv2 = nn.Conv2d(seq_length, seq_length*2, 5)
+        self.conv3 = nn.Conv2d(seq_length*2, seq_length*3, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+
+    def forward(self, i):
+        x = i.reshape(-1, i.shape[2], i.shape[3], i.shape[4]) # merges batch and length dimension
+        x = F.relu(self.conv1(x))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = self.pool(F.relu(self.conv3(x)))
+        x = x.view(i.shape[0], i.shape[1], -1)
+
+        return x

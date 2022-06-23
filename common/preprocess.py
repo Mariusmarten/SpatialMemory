@@ -4,7 +4,7 @@ import random
 import copy
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
-
+from torch.autograd import Variable
 
 class ObtainDataset(Dataset):
     '''
@@ -250,3 +250,67 @@ def recode_actions(dataset, n):
     dataset['actions'] = actions_recoded
 
     return dataset, counter, single_class_encoding_dic
+
+def sliding_windows(dataset, seq_length, hot_encoding=True):
+    x_actions = []
+    y_actions = []
+
+    actions = dataset['actions']
+    imgs = dataset['observations']
+
+    # preprocess actions
+    actions = [[i] for i in actions]
+
+    # preprocess images
+    x_imgs = []
+    for img in imgs:
+        img = torch.from_numpy(img).float()
+        img = img.permute(2, 0, 1)
+        x_imgs.append(img)
+    x_imgs_processed = torch.stack(x_imgs)
+
+    # actual sliding window
+    x_imgs = []
+    for i in range(len(actions)-seq_length-1):
+        _x_actions = actions[i:(i+seq_length)]
+        _x_imgs = x_imgs_processed[i:(i+seq_length)]
+        _y_actions = actions[i+1+seq_length] # _y = data[i+seq_length]
+
+        x_actions.append(_x_actions)
+        x_imgs.append(_x_imgs)
+        y_actions.append(_y_actions)
+
+    x_imgs = torch.stack(x_imgs)
+
+    if hot_encoding:
+
+        adopted = []
+        for values in y_actions:
+            #for value in values:
+            val = np.eye(4)[values[0]]
+            adopted.append(val)
+        y_actions = adopted
+
+    return np.array(x_actions), x_imgs, np.array(y_actions) # train, val. data
+
+def split(x_acts, x_imgs, y_acts, training_set_size):
+
+    train_size = int(len(y_acts) * training_set_size)
+    test_size = len(y_acts) - train_size
+
+    # (full) data set
+    dataX_acts = Variable(torch.Tensor(np.array(x_acts)))
+    dataX_imgs = Variable(torch.Tensor(x_imgs))
+    dataY_acts = Variable(torch.Tensor(np.array(y_acts)))
+
+    # training set
+    trainX_acts = Variable(torch.Tensor(np.array(x_acts[0:train_size])))
+    trainX_imgs = Variable(torch.Tensor(np.array(x_imgs[0:train_size])))
+    trainY_acts = Variable(torch.Tensor(np.array(y_acts[0:train_size])))
+
+    # validation set
+    testX_acts = Variable(torch.Tensor(np.array(x_acts[train_size:len(x_acts)])))
+    testX_imgs = Variable(torch.Tensor(np.array(x_imgs[train_size:len(x_imgs)])))
+    testY_acts = Variable(torch.Tensor(np.array(y_acts[train_size:len(y_acts)])))
+
+    return [dataX_acts, dataX_imgs, dataY_acts], [trainX_acts, trainX_imgs, trainY_acts], [testX_acts, testX_imgs, testY_acts]
