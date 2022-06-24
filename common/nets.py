@@ -101,7 +101,7 @@ class DualInput(nn.Module):
 # original_version
 class CNN_coords(nn.Module):
     def __init__(self):
-        super(CNN, self).__init__()
+        super(CNN_coords, self).__init__()
         self.conv1 = nn.Conv2d(3, 10, 5)
         self.conv2 = nn.Conv2d(10, 20, 5)
         self.conv3 = nn.Conv2d(20, 30, 5)
@@ -118,7 +118,7 @@ class CNN_coords(nn.Module):
 
 class LSTM_coords(nn.Module):
     def __init__(self, length_trajectory):
-        super(LSTM, self).__init__()
+        super(LSTM_coords, self).__init__()
         self.lstm = nn.LSTM(480, 100, 2)
         self.fc = nn.Linear(100*10, length_trajectory)
 
@@ -159,8 +159,8 @@ class LSTM(nn.Module):
         # Propagate input through LSTM
         ula, (h_out, _) = self.lstm(x, (h_0, c_0))
         h_out = h_out.view(-1, self.hidden_size)
-        out = F.relu(self.fc1(h_out))
-        out = self.fc2(out)
+        out = F.relu(self.fc1(h_out)) # relu
+        out = self.fc2(out) #F.log_softmax(, dim=1), tanh
 
         return out
 

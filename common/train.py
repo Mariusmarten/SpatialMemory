@@ -493,6 +493,7 @@ def train_ConvLSTM(train_data, val_data, net_cnn, net_lstm, criterion, optimizer
                         inputs = torch.swapaxes(inputs, 0, 1)
 
                         encoded = net_cnn(inputs)
+                        print(encoded)
                         outputs_A, outputs_B, h, c = net_lstm(encoded, h, c)
                         outputs_A = outputs_A.double()
                         outputs_B = outputs_B.double()

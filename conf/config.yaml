@@ -2,6 +2,7 @@ params:
 
     # Traing with images or actions
     train_imgs : False
+    save_infos : False
 
     # preprocessing
     dataset_name : None
