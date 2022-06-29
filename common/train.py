@@ -5,19 +5,20 @@ from tqdm.auto import tqdm
 import torchvision
 from torch.utils.tensorboard import SummaryWriter
 
+
 def train_Feedforward(train_data, val_data, net, criterion, optimizer, steps):
-    '''
+    """
     Main training loop
     Input: dataset_loader, network, training_loss, optimizer, step size
     Output: trained network
-    '''
+    """
 
     train_loss = []
     test_loss = []
     train_acc = []
     test_acc = []
 
-    with tqdm(total=steps, unit =" Episode", desc ="Progress") as pbar:
+    with tqdm(total=steps, unit=" Episode", desc="Progress") as pbar:
         for epoch in range(steps):  # loop over the dataset multiple times
 
             train_running_loss = 0.0
@@ -63,31 +64,34 @@ def train_Feedforward(train_data, val_data, net, criterion, optimizer, steps):
                         test_total += labels.size(0)
                         test_correct += (predicted == labels).sum().item()
 
-            train_loss.append(train_running_loss/len(train_data))
-            test_loss.append(test_running_loss/len(val_data))
+            train_loss.append(train_running_loss / len(train_data))
+            test_loss.append(test_running_loss / len(val_data))
             train_acc.append(100 * train_correct / train_total)
             test_acc.append(100 * test_correct / test_total)
             pbar.update(1)
 
             if epoch % 10 == 0:
-                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,')
+                print(
+                    f"Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,"
+                )
 
-    print('Finished Training')
+    print("Finished Training")
     return net, train_loss, test_loss, train_acc, test_acc
 
+
 def train_DiffImg(train_data, val_data, net, criterion, optimizer, steps):
-    '''
+    """
     Main training loop
     Input: dataset_loader, network, training_loss, optimizer, step size
     Output: trained network
-    '''
+    """
 
     train_loss = []
     test_loss = []
     train_acc = []
     test_acc = []
 
-    with tqdm(total=steps, unit =" Episode", desc ="Progress") as pbar:
+    with tqdm(total=steps, unit=" Episode", desc="Progress") as pbar:
         for epoch in range(steps):  # loop over the dataset multiple times
 
             train_running_loss = 0.0
@@ -142,24 +146,27 @@ def train_DiffImg(train_data, val_data, net, criterion, optimizer, steps):
                         test_total += labels.size(0)
                         test_correct += (predicted == labels).sum().item()
 
-            train_loss.append(train_running_loss/len(train_data))
-            test_loss.append(test_running_loss/len(val_data))
+            train_loss.append(train_running_loss / len(train_data))
+            test_loss.append(test_running_loss / len(val_data))
             train_acc.append(100 * train_correct / train_total)
             test_acc.append(100 * test_correct / test_total)
             pbar.update(1)
 
             if epoch % 10 == 0:
-                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,')
+                print(
+                    f"Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,"
+                )
 
-    print('Finished Training')
+    print("Finished Training")
     return net, train_loss, test_loss, train_acc, test_acc
 
+
 def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
-    '''
+    """
     Main training loop
     Input: dataset_loader, network, training_loss, optimizer, step size
     Output: trained network
-    '''
+    """
 
     train_loss = []
     test_loss = []
@@ -173,7 +180,7 @@ def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
     train_distances_itemwise = []
     test_distances_itemwise = []
 
-    with tqdm(total=steps, unit =" Episode", desc ="Progress") as pbar:
+    with tqdm(total=steps, unit=" Episode", desc="Progress") as pbar:
         for epoch in range(steps):  # loop over the dataset multiple times
 
             train_running_loss = 0.0
@@ -203,7 +210,10 @@ def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
                 loss.backward()
 
                 # compute train_distances
-                train_distance_itemwise = torch.sqrt(torch.square(labels_A - outputs_A.squeeze()) + torch.square(labels_B - outputs_B.squeeze()))
+                train_distance_itemwise = torch.sqrt(
+                    torch.square(labels_A - outputs_A.squeeze())
+                    + torch.square(labels_B - outputs_B.squeeze())
+                )
                 train_distance = torch.sum(train_distance_itemwise)
                 train_distance = torch.div(train_distance, len(labels_A))
 
@@ -237,7 +247,6 @@ def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
                     for data in val_data:
                         inputs, labels = data
 
-
                         # compute test loss
                         labels_A = torch.FloatTensor([item[0] for item in labels])
                         labels_B = torch.FloatTensor([item[2] for item in labels])
@@ -251,7 +260,10 @@ def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
                         test_running_loss += loss.item()
 
                         # compute test_distances
-                        test_distance_itemwise = torch.sqrt(torch.square(labels_A - outputs_A.squeeze()) + torch.square(labels_B - outputs_B.squeeze()))
+                        test_distance_itemwise = torch.sqrt(
+                            torch.square(labels_A - outputs_A.squeeze())
+                            + torch.square(labels_B - outputs_B.squeeze())
+                        )
                         test_distance = torch.sum(test_distance_itemwise)
                         test_distance = torch.div(test_distance, len(labels_A)).numpy()
 
@@ -267,8 +279,8 @@ def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
                         test_correct += int((outputs_A.squeeze() == labels_A).sum())
                         test_correct += int((outputs_B.squeeze() == labels_B).sum())
 
-            train_loss.append(train_running_loss/len(train_data))
-            test_loss.append(test_running_loss/len(val_data))
+            train_loss.append(train_running_loss / len(train_data))
+            test_loss.append(test_running_loss / len(val_data))
 
             train_acc.append(100 * train_correct / train_total)
             test_acc.append(100 * test_correct / test_total)
@@ -282,18 +294,30 @@ def train_DualOutput(train_data, val_data, net, criterion, optimizer, steps):
             pbar.update(1)
 
             if epoch % 10 == 0:
-                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,')
+                print(
+                    f"Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,"
+                )
 
-    print('Finished Training')
-    return net, train_loss, test_loss, train_acc, test_acc, train_distances, test_distances, train_distances_itemwise, test_distances_itemwise
+    print("Finished Training")
+    return (
+        net,
+        train_loss,
+        test_loss,
+        train_acc,
+        test_acc,
+        train_distances,
+        test_distances,
+        train_distances_itemwise,
+        test_distances_itemwise,
+    )
 
 
 def train_DualInput(train_data, val_data, net, criterion, optimizer, steps):
-    '''
+    """
     Main training loop
     Input: dataset_loader, network, training_loss, optimizer, step size
     Output: trained network
-    '''
+    """
 
     train_loss = []
     test_loss = []
@@ -303,10 +327,10 @@ def train_DualInput(train_data, val_data, net, criterion, optimizer, steps):
 
     imagesA, imagesB, labels = next(iter(train_data))
     grid = torchvision.utils.make_grid(imagesA)
-    writer.add_image('images', grid, 0)
+    writer.add_image("images", grid, 0)
     writer.add_graph(net, [imagesA, imagesB])
 
-    with tqdm(total=steps, unit =" Episode", desc ="Progress") as pbar:
+    with tqdm(total=steps, unit=" Episode", desc="Progress") as pbar:
         for epoch in range(steps):  # loop over the dataset multiple times
 
             train_running_loss = 0.0
@@ -360,31 +384,47 @@ def train_DualInput(train_data, val_data, net, criterion, optimizer, steps):
                         test_correct += (predicted == labels).sum().item()
 
             # tensorboard logs
-            writer.add_scalar('Loss/train', (train_running_loss/len(train_data)), epoch)
-            writer.add_scalar('Loss/test', (test_running_loss/len(val_data)), epoch)
-            writer.add_scalar('Accuracy/train', (100 * train_correct / train_total), epoch)
-            writer.add_scalar('Accuracy/test', (100 * test_correct / test_total), epoch)
+            writer.add_scalar(
+                "Loss/train", (train_running_loss / len(train_data)), epoch
+            )
+            writer.add_scalar("Loss/test", (test_running_loss / len(val_data)), epoch)
+            writer.add_scalar(
+                "Accuracy/train", (100 * train_correct / train_total), epoch
+            )
+            writer.add_scalar("Accuracy/test", (100 * test_correct / test_total), epoch)
 
             # plotting logs
-            train_loss.append(train_running_loss/len(train_data))
-            test_loss.append(test_running_loss/len(val_data))
+            train_loss.append(train_running_loss / len(train_data))
+            test_loss.append(test_running_loss / len(val_data))
             train_acc.append(100 * train_correct / train_total)
             test_acc.append(100 * test_correct / test_total)
             pbar.update(1)
 
             if epoch % 10 == 0:
-                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,')
+                print(
+                    f"Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train Acc: {(100 * train_correct / train_total):.4} %,  Test Loss: {(test_running_loss/len(val_data)):.4}, Test Acc: {(100 * test_correct / test_total):.4} %,"
+                )
 
     writer.close()
-    print('Finished Training')
+    print("Finished Training")
     return net, train_loss, test_loss, train_acc, test_acc
 
-def train_ConvLSTM(train_data, val_data, net_cnn, net_lstm, criterion, optimizer, steps, length_trajectory):
-    '''
+
+def train_ConvLSTM(
+    train_data,
+    val_data,
+    net_cnn,
+    net_lstm,
+    criterion,
+    optimizer,
+    steps,
+    length_trajectory,
+):
+    """
     Main training loop
     Input: dataset_loader, network, training_loss, optimizer, step size
     Output: trained network
-    '''
+    """
 
     train_loss = []
     test_loss = []
@@ -401,7 +441,7 @@ def train_ConvLSTM(train_data, val_data, net_cnn, net_lstm, criterion, optimizer
     h = torch.randn(2, length_trajectory, 100)
     c = torch.randn(2, length_trajectory, 100)
 
-    with tqdm(total=steps, unit =" Episode", desc ="Progress") as pbar:
+    with tqdm(total=steps, unit=" Episode", desc="Progress") as pbar:
         for epoch in range(steps):  # loop over the dataset multiple times
 
             train_running_loss = 0.0
@@ -436,9 +476,9 @@ def train_ConvLSTM(train_data, val_data, net_cnn, net_lstm, criterion, optimizer
                 optimizer.zero_grad()
 
                 # forward + backward + optimize
-                #opt = torch.rand((64, 10, 3, 32, 32))
-                #print('shape of the optimal inputs', opt.shape)
-                #print('shape of the network inputs', inputs.shape)
+                # opt = torch.rand((64, 10, 3, 32, 32))
+                # print('shape of the optimal inputs', opt.shape)
+                # print('shape of the network inputs', inputs.shape)
                 encoded = net_cnn(inputs)
                 outputs_A, outputs_B, h, c = net_lstm(encoded, h, c)
                 outputs_A = outputs_A.double()
@@ -453,9 +493,14 @@ def train_ConvLSTM(train_data, val_data, net_cnn, net_lstm, criterion, optimizer
                 optimizer.step()
 
                 # compute train_distances
-                train_distance_itemwise = torch.sqrt(torch.square(labels_A - outputs_A.squeeze()) + torch.square(labels_B - outputs_B.squeeze()))
+                train_distance_itemwise = torch.sqrt(
+                    torch.square(labels_A - outputs_A.squeeze())
+                    + torch.square(labels_B - outputs_B.squeeze())
+                )
                 train_distance = torch.sum(train_distance_itemwise)
-                train_distance = torch.div(train_distance, len(labels_A)*length_trajectory)
+                train_distance = torch.div(
+                    train_distance, len(labels_A) * length_trajectory
+                )
 
                 # track loss statistics
                 train_running_loss += loss.item()
@@ -505,13 +550,17 @@ def train_ConvLSTM(train_data, val_data, net_cnn, net_lstm, criterion, optimizer
                         test_running_loss += loss.item()
 
                         # compute test_distances
-                        test_distance_itemwise = torch.sqrt(torch.square(labels_A - outputs_A.squeeze()) + torch.square(labels_B - outputs_B.squeeze()))
+                        test_distance_itemwise = torch.sqrt(
+                            torch.square(labels_A - outputs_A.squeeze())
+                            + torch.square(labels_B - outputs_B.squeeze())
+                        )
                         test_distance = torch.sum(test_distance_itemwise)
-                        test_distance = torch.div(test_distance, len(labels_A)*length_trajectory).numpy()
+                        test_distance = torch.div(
+                            test_distance, len(labels_A) * length_trajectory
+                        ).numpy()
 
-
-            train_loss.append(train_running_loss/len(train_data)*10)
-            test_loss.append(test_running_loss/len(val_data)*10)
+            train_loss.append(train_running_loss / len(train_data) * 10)
+            test_loss.append(test_running_loss / len(val_data) * 10)
 
             train_distances.append(train_distance)
             test_distances.append(test_distance)
@@ -522,7 +571,16 @@ def train_ConvLSTM(train_data, val_data, net_cnn, net_lstm, criterion, optimizer
             pbar.update(1)
 
             if epoch % 10 == 0:
-                print(f'Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train distance: {train_distance:.4}, , Test distance: {test_distance:.4}')
-    print('Finished Training')
+                print(
+                    f"Epoch: {epoch + 1}, Train Loss: {(train_running_loss/len(train_data)):.4}, Train distance: {train_distance:.4}, , Test distance: {test_distance:.4}"
+                )
+    print("Finished Training")
 
-    return train_loss, test_loss, train_distances, test_distances, train_distances_itemwise, test_distances_itemwise
+    return (
+        train_loss,
+        test_loss,
+        train_distances,
+        test_distances,
+        train_distances_itemwise,
+        test_distances_itemwise,
+    )
