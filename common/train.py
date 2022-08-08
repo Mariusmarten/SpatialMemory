@@ -28,7 +28,9 @@ def train_Feedforward(train_data, val_data, net, criterion, optimizer, steps):
 
             for i, data in enumerate(train_data, 0):
                 # get the inputs; data is a list of [inputs, labels]
-                inputs, labels = data
+                inputs, _, labels = data
+                labels = labels[0]
+                labels = labels.to(torch.long)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
@@ -55,7 +57,10 @@ def train_Feedforward(train_data, val_data, net, criterion, optimizer, steps):
                 # same for validation set
                 with torch.no_grad():
                     for data in val_data:
-                        inputs, labels = data
+                        inputs, _, labels = data
+                        labels = labels[0]
+                        labels = labels.to(torch.long)
+
                         outputs = net(inputs)
                         loss = criterion(outputs, labels)
                         test_running_loss += loss.item()
