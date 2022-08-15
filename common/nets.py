@@ -113,7 +113,6 @@ class CNN_coords(nn.Module):
         self.pool = nn.MaxPool2d(2, 2)
 
     def forward(self, i):
-        # x = i.view(-1, i.shape[2], i.shape[3], i.shape[4])
         x = i.reshape(-1, i.shape[2], i.shape[3], i.shape[4])
         x = F.relu(self.conv1(x))
         x = self.pool(F.relu(self.conv2(x)))
@@ -126,15 +125,19 @@ class LSTM_coords(nn.Module):
     def __init__(self, length_trajectory):
         super(LSTM_coords, self).__init__()
         self.lstm = nn.LSTM(480, 100, 2)
-        self.fc = nn.Linear(100 * 10, length_trajectory)
+        self.fc1 = nn.Linear(100 * 10, 84)
+        self.fc2 = nn.Linear(84, 1)
 
     def forward(self, x, hn, cn):
         x, (hn, cn) = self.lstm(x, (hn, cn))
         hn, cn = (hn, cn)
         x = F.relu(x.view(x.shape[0], -1))
 
-        output0 = F.relu(self.fc(x))
-        output1 = F.relu(self.fc(x))
+        output0 = F.relu(self.fc1(x))
+        output1 = F.relu(self.fc1(x))
+
+        output0 = self.fc2(output0)
+        output1 = self.fc2(output1)
         # alternatively we could just return the final hidde
         return output0, output1, hn, cn
 
