@@ -4,6 +4,7 @@ Implementation and testing repository of several feedforward and recurrent metho
 Contents:
 - [Dataset](#dataset)
 - [Models](#models)
+- [Results](#results)
 - [Usage](#usage)
 
 ## Dataset
@@ -60,6 +61,8 @@ that module or any of its dependencies includes i18n bundles, only the root
 bundles will be included unless the locale: section is set above.</td>
 </tr>
 </table>
+
+## Results
 
 ## Usage
 
