@@ -61,28 +61,28 @@ The repository contains the following models:
 <td>Coordinate prediction</td>
 <td>Recurrent</td>
 <td>366.402</td>
-<td>text</td>
+<td>LSTM that takes as input a coordinate sequence and predicts the next coordinate.</td>
 </tr>
 <tr>
 <td>F</td>
 <td>Action prediction</td>
 <td>Recurrent</td>
 <td>365.402</td>
-<td>text</td>
+<td>LSTM that takes as input an action sequence and predicts the next action.</td>
 </tr>
 <tr>
 <td>G</td>
 <td>Coordinate prediction</td>
 <td>Recurrent</td>
 <td>1.031.724</td>
-<td>text</td>
+<td>ConvLSTM: the CNN part of the network takes as input a sequence of input images, the lower dimensional features are then feed into the LSTM which predicts the next coordinates.</td>
 </tr>
 <tr>
 <td>H</td>
 <td>Action prediction</td>
 <td>Recurrent</td>
 <td>1.031.724</td>
-<td>text</td>
+<td>ConvLSTM: the CNN part of the network takes as input a sequence of input images, the lower dimensional features are then feed into the LSTM which predicts the next action.</td>
 </tr>
 </table>
 
