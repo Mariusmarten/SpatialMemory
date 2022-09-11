@@ -18,7 +18,7 @@ The repository contains the following models:
 <table>
 <tr>
 <th>Model</th>
-<th>Name</th>
+<th>Task</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
