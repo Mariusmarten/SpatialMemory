@@ -5,8 +5,10 @@ Implementation and testing repository of several feedforward and recurrent metho
 ## Dataset
 The
 
+<p align="center">
 <img src="img/environment-dataset.png"  width=50% height=50%>
-
+</p>
+  
 ## Models
 
 The repository contains the following models:
