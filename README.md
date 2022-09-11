@@ -1,2 +1,2 @@
-# StateInfoGain
-State Information Gain Agent
+# Spatial Memory
+Learning representations for simultaneous localisation and mapping
