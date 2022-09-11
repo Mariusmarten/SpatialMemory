@@ -1,4 +1,4 @@
 # Spatial Memory
 Learning representations for simultaneous localisation and mapping
 
-<img src="img/feedforward_models.png" width="425"/> <img src="img/recurrent_models.png" width="400" width="425"/> 
+<img src="img/feedforward_models.png" width="425"/> <img src="img/recurrent_models.png" width="700" width="425"/> 
