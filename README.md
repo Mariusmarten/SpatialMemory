@@ -25,6 +25,7 @@ The repository contains the following models:
 <th>Model</th>
 <th>Task</th>
 <th>Type</th>
+<th>Parameter</th>
 <th>Description</th>
 </tr>
 <tr>
@@ -55,6 +56,34 @@ relative paths are relative to the build file.</td>
 <td>D</td>
 <td>Action prediction</td>
 <td>Feedforward</td>
+<td>List the modules that will be optimized. All their immediate and deep
+dependencies will be included in the module's file when the build is done. If
+that module or any of its dependencies includes i18n bundles, only the root
+bundles will be included unless the locale: section is set above.</td>
+<td>E</td>
+<td>Action prediction</td>
+<td>Recurrent</td>
+<td>List the modules that will be optimized. All their immediate and deep
+dependencies will be included in the module's file when the build is done. If
+that module or any of its dependencies includes i18n bundles, only the root
+bundles will be included unless the locale: section is set above.</td>
+<td>F</td>
+<td>Action prediction</td>
+<td>Recurrent</td>
+<td>List the modules that will be optimized. All their immediate and deep
+dependencies will be included in the module's file when the build is done. If
+that module or any of its dependencies includes i18n bundles, only the root
+bundles will be included unless the locale: section is set above.</td>
+<td>G</td>
+<td>Action prediction</td>
+<td>Recurrent</td>
+<td>List the modules that will be optimized. All their immediate and deep
+dependencies will be included in the module's file when the build is done. If
+that module or any of its dependencies includes i18n bundles, only the root
+bundles will be included unless the locale: section is set above.</td>
+<td>H</td>
+<td>Action prediction</td>
+<td>Recurrent</td>
 <td>List the modules that will be optimized. All their immediate and deep
 dependencies will be included in the module's file when the build is done. If
 that module or any of its dependencies includes i18n bundles, only the root
