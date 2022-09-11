@@ -33,28 +33,28 @@ The repository contains the following models:
 <td>Coordinate prediction</td>
 <td>Feedforward</td>
 <td>119.610</td>
-<td>text</td>
+<td>Obtains a single image as input and outputs the associated coordinates.</td>
 </tr>
 <tr>
 <td>B</td>
 <td>Action prediction</td>
 <td>Feedforward</td>
 <td>133.788</td>
-<td>text</td>
+<td>Two input images, N-steps apart are fed into the network. The network outputs the action sequence connecting the two images. </td>
 </tr>
 <tr>
 <td>C</td>
 <td>Action prediction</td>
 <td>Feedforward</td>
 <td>61.496</td>
-<td>text</td>
+<td>Predicing the associated action sequence using a vanilla feedforward modle.</td>
 </tr>
 <tr>
 <td>D</td>
 <td>Action prediction</td>
 <td>Feedforward</td>
 <td>61.496</td>
-<td>text</td>
+<td>Taking as input the pixel wise difference between two images. The network outputs the action sequence connecting the two images. The network architecture is similar to the vanilla feedforward model.</td>
 </tr>
 <tr>
 <td>E</td>
