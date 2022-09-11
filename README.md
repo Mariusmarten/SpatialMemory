@@ -24,6 +24,8 @@ The repository contains the following models:
 </tr>
 <tr>
 <td>A</td>
+<td>Coordinate prediction</td>
+<td>Feedforward</td>
 <td>The top level directory that contains your app. If this option is used then
 it assumed your scripts are in</td>
 </tr>
