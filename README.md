@@ -1,5 +1,7 @@
 # Spatial Memory
 
+![env](img/environment-models.png "env")
+
 Implementation and testing repository of several feedforward and recurrent methods for learning representations for simultaneous localisation and mapping. The repository contains the following models:
 
 ![models](img/models.png "Models")
@@ -35,3 +37,5 @@ that module or any of its dependencies includes i18n bundles, only the root
 bundles will be included unless the locale: section is set above.</td>
 </tr>
 </table>
+
+
