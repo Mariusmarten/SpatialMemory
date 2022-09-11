@@ -33,77 +33,56 @@ The repository contains the following models:
 <td>Coordinate prediction</td>
 <td>Feedforward</td>
 <td>119.610</td>
-<td>The top level directory that contains your app. If this option is used then
-it assumed your scripts are in</td>
+<td>text</td>
 </tr>
 <tr>
 <td>B</td>
 <td>Action prediction</td>
 <td>Feedforward</td>
 <td>133.788</td>
-<td>By default, all modules are located relative to this path. If baseUrl is not
-explicitly set, then all modules are loaded relative to the directory that holds
-the build file. If appDir is set, then baseUrl should be specified as relative
-to the appDir.</td>
+<td>text</td>
 </tr>
 <tr>
 <td>C</td>
 <td>Action prediction</td>
 <td>Feedforward</td>
 <td>61.496</td>
-<td>The directory path to save the output. If not specified, then the path will
-default to be a directory called "build" as a sibling to the build file. All
-relative paths are relative to the build file.</td>
+<td>text</td>
 </tr>
 <tr>
 <td>D</td>
 <td>Action prediction</td>
 <td>Feedforward</td>
 <td>61.496</td>
-<td>List the modules that will be optimized. All their immediate and deep
-dependencies will be included in the module's file when the build is done. If
-that module or any of its dependencies includes i18n bundles, only the root
-bundles will be included unless the locale: section is set above.</td>
+<td>text</td>
 </tr>
 <tr>
 <td>E</td>
 <td>Coordinate prediction</td>
 <td>Recurrent</td>
 <td>366.402</td>
-<td>List the modules that will be optimized. All their immediate and deep
-dependencies will be included in the module's file when the build is done. If
-that module or any of its dependencies includes i18n bundles, only the root
-bundles will be included unless the locale: section is set above.</td>
+<td>text</td>
 </tr>
 <tr>
 <td>F</td>
 <td>Action prediction</td>
 <td>Recurrent</td>
 <td>365.402</td>
-<td>List the modules that will be optimized. All their immediate and deep
-dependencies will be included in the module's file when the build is done. If
-that module or any of its dependencies includes i18n bundles, only the root
-bundles will be included unless the locale: section is set above.</td>
+<td>text</td>
 </tr>
 <tr>
 <td>G</td>
 <td>Coordinate prediction</td>
 <td>Recurrent</td>
 <td>1.031.724</td>
-<td>List the modules that will be optimized. All their immediate and deep
-dependencies will be included in the module's file when the build is done. If
-that module or any of its dependencies includes i18n bundles, only the root
-bundles will be included unless the locale: section is set above.</td>
+<td>text</td>
 </tr>
 <tr>
 <td>H</td>
 <td>Action prediction</td>
 <td>Recurrent</td>
 <td>1.031.724</td>
-<td>List the modules that will be optimized. All their immediate and deep
-dependencies will be included in the module's file when the build is done. If
-that module or any of its dependencies includes i18n bundles, only the root
-bundles will be included unless the locale: section is set above.</td>
+<td>text</td>
 </tr>
 </table>
 
