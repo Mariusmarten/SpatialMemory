@@ -57,4 +57,6 @@ bundles will be included unless the locale: section is set above.</td>
 </tr>
 </table>
 
+## Usage
 
+The results reported in the report are reproducible using the provided jupyter notebook. They run with little to no dependencies. First, the dataset generation notebook needs to be ran. The obtained datasets can then be used to train the models in notebooks A-H. 
