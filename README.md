@@ -64,6 +64,8 @@ bundles will be included unless the locale: section is set above.</td>
 
 ## Results
 
+We find that models that integrate the largest amount of previous information perform best. Local single-state information is insufficient to distinguish identical-looking states and to uniquely determine the global position. Our results imply that model-based navigation agents profit from integrating trajectory information and that agents should thus be endowed with mechanisms to do so.
+
 ## Usage
 
 The results reported in the report are reproducible using the provided jupyter notebook. They run with little to no dependencies. First, the dataset generation notebook needs to be ran. The obtained datasets can then be used to train the models in notebooks A-H. 
