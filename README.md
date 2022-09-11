@@ -1,6 +1,6 @@
 # Spatial Memory
 
-![env](img/environment-models.png "env")
+![env](img/environment-dataset.png "env")
 
 Implementation and testing repository of several feedforward and recurrent methods for learning representations for simultaneous localisation and mapping. The repository contains the following models:
 
