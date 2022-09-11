@@ -3,9 +3,9 @@
 Implementation and testing repository of several feedforward and recurrent methods for learning representations for simultaneous localisation and mapping.  
 
 ## Dataset
-The 
+The
 
-![env](img/environment-dataset.png "env")
+<img src="img/environment-dataset.png"  width=50% height=50%>
 
 ## Models
 
