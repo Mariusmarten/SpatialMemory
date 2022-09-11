@@ -60,6 +60,8 @@ relative paths are relative to the build file.</td>
 dependencies will be included in the module's file when the build is done. If
 that module or any of its dependencies includes i18n bundles, only the root
 bundles will be included unless the locale: section is set above.</td>
+</tr>
+<tr>
 <td>E</td>
 <td>Action prediction</td>
 <td>Recurrent</td>
@@ -74,6 +76,8 @@ bundles will be included unless the locale: section is set above.</td>
 dependencies will be included in the module's file when the build is done. If
 that module or any of its dependencies includes i18n bundles, only the root
 bundles will be included unless the locale: section is set above.</td>
+</tr>
+<tr>
 <td>G</td>
 <td>Action prediction</td>
 <td>Recurrent</td>
@@ -81,6 +85,8 @@ bundles will be included unless the locale: section is set above.</td>
 dependencies will be included in the module's file when the build is done. If
 that module or any of its dependencies includes i18n bundles, only the root
 bundles will be included unless the locale: section is set above.</td>
+</tr>
+<tr>
 <td>H</td>
 <td>Action prediction</td>
 <td>Recurrent</td>
