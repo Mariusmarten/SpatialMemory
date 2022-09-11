@@ -4,11 +4,6 @@ Implementation and testing repository of several feedforward and recurrent metho
 
 ![models](img/models.png "Models")
 
-| Syntax      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
-
 <table>
 <tr>
 <th>Argument</th>
