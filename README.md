@@ -63,7 +63,7 @@ bundles will be included unless the locale: section is set above.</td>
 </tr>
 <tr>
 <td>E</td>
-<td>Action prediction</td>
+<td>Coordinate prediction</td>
 <td>Recurrent</td>
 <td>List the modules that will be optimized. All their immediate and deep
 dependencies will be included in the module's file when the build is done. If
@@ -81,7 +81,7 @@ bundles will be included unless the locale: section is set above.</td>
 </tr>
 <tr>
 <td>G</td>
-<td>Action prediction</td>
+<td>Coordinate prediction</td>
 <td>Recurrent</td>
 <td>List the modules that will be optimized. All their immediate and deep
 dependencies will be included in the module's file when the build is done. If
