@@ -3,7 +3,7 @@
 Implementation and testing repository of several feedforward and recurrent methods for learning representations for simultaneous localisation and mapping.  
 
 ## Dataset
-The
+The datasets were created using the [Gym-Miniworld](https://github.com/Farama-Foundation/MiniWorld) a minimalistic 3D interior environment simulator. The create datasets contain first-person observations, a depth map, a bird's eye view perspective, the agent coordinates, orientation and the actions performed at each location.
 
 <p align="center">
 <img src="img/environment-dataset.png"  width=50% height=50%>
