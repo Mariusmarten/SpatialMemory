@@ -1,6 +1,8 @@
 # Spatial Memory
 
-Implementation and testing repository of several feedforward and recurrent methods for learning representations for simultaneous localisation and mapping.  
+Implementation and testing repository of several feedforward and recurrent methods for learning representations for simultaneous localisation and mapping. 
+
+
 Contents:
 - [Dataset](#dataset)
 - [Models](#models)
